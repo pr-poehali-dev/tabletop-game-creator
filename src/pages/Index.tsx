@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import HomePage from '@/components/HomePage';
 import ConstructorPage from '@/components/ConstructorPage';
@@ -13,6 +13,17 @@ const Index = () => {
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [user, setUser] = useState<{ username: string; email: string } | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('gameforge_user');
+    if (savedUser) {
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (error) {
+        localStorage.removeItem('gameforge_user');
+      }
+    }
+  }, []);
 
   const games = [
     {
@@ -94,11 +105,14 @@ const Index = () => {
   ];
 
   const handleLogin = (username: string, email: string) => {
-    setUser({ username, email });
+    const userData = { username, email };
+    setUser(userData);
+    localStorage.setItem('gameforge_user', JSON.stringify(userData));
   };
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem('gameforge_user');
     setActiveTab('home');
   };
 
