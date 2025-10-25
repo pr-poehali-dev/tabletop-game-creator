@@ -7,6 +7,7 @@ import MyGamesPage from '@/components/MyGamesPage';
 import LearnPage from '@/components/LearnPage';
 import ProfilePage from '@/components/ProfilePage';
 import AuthModal from '@/components/AuthModal';
+import AuthRequired from '@/components/AuthRequired';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -127,9 +128,13 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-8">
         {activeTab === 'home' && <HomePage games={games} setActiveTab={setActiveTab} />}
-        {activeTab === 'constructor' && <ConstructorPage />}
+        {activeTab === 'constructor' && (
+          user ? <ConstructorPage /> : <AuthRequired onAuthClick={() => setIsAuthModalOpen(true)} />
+        )}
         {activeTab === 'gallery' && <GalleryPage games={games} setSelectedGame={setSelectedGame} />}
-        {activeTab === 'my-games' && <MyGamesPage myGames={myGames} setActiveTab={setActiveTab} />}
+        {activeTab === 'my-games' && (
+          user ? <MyGamesPage myGames={myGames} setActiveTab={setActiveTab} /> : <AuthRequired onAuthClick={() => setIsAuthModalOpen(true)} />
+        )}
         {activeTab === 'learn' && <LearnPage tutorials={tutorials} />}
         {activeTab === 'profile' && user && <ProfilePage user={user} onLogout={handleLogout} />}
       </main>
