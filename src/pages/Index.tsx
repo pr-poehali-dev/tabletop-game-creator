@@ -5,10 +5,14 @@ import ConstructorPage from '@/components/ConstructorPage';
 import GalleryPage from '@/components/GalleryPage';
 import MyGamesPage from '@/components/MyGamesPage';
 import LearnPage from '@/components/LearnPage';
+import ProfilePage from '@/components/ProfilePage';
+import AuthModal from '@/components/AuthModal';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
+  const [user, setUser] = useState<{ username: string; email: string } | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   const games = [
     {
@@ -89,9 +93,23 @@ const Index = () => {
     }
   ];
 
+  const handleLogin = (username: string, email: string) => {
+    setUser({ username, email });
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setActiveTab('home');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20">
-      <Header activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Header
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        user={user}
+        onAuthClick={() => setIsAuthModalOpen(true)}
+      />
 
       <main className="container mx-auto px-4 py-8">
         {activeTab === 'home' && <HomePage games={games} setActiveTab={setActiveTab} />}
@@ -99,6 +117,7 @@ const Index = () => {
         {activeTab === 'gallery' && <GalleryPage games={games} setSelectedGame={setSelectedGame} />}
         {activeTab === 'my-games' && <MyGamesPage myGames={myGames} setActiveTab={setActiveTab} />}
         {activeTab === 'learn' && <LearnPage tutorials={tutorials} />}
+        {activeTab === 'profile' && user && <ProfilePage user={user} onLogout={handleLogout} />}
       </main>
 
       <footer className="border-t mt-16 py-8 bg-muted/30">
@@ -107,6 +126,12 @@ const Index = () => {
           <p>Создано с ❤️ для сообщества геймдизайнеров</p>
         </div>
       </footer>
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLogin={handleLogin}
+      />
     </div>
   );
 };
