@@ -8,12 +8,14 @@ import LearnPage from '@/components/LearnPage';
 import ProfilePage from '@/components/ProfilePage';
 import AuthModal from '@/components/AuthModal';
 import AuthRequired from '@/components/AuthRequired';
+import WelcomeMessage from '@/components/WelcomeMessage';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
   const [user, setUser] = useState<{ username: string; email: string } | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('gameforge_user');
@@ -109,6 +111,7 @@ const Index = () => {
     const userData = { username, email };
     setUser(userData);
     localStorage.setItem('gameforge_user', JSON.stringify(userData));
+    setShowWelcome(true);
   };
 
   const handleLogout = () => {
@@ -119,6 +122,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-accent/20">
+      {showWelcome && user && <WelcomeMessage username={user.username} />}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
