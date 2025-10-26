@@ -38,10 +38,11 @@ const GalleryPage = ({ games, setSelectedGame }: GalleryPageProps) => {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {games.map((game) => (
+        {games.map((game, index) => (
           <Card 
             key={game.id} 
-            className="overflow-hidden hover:shadow-xl transition-all cursor-pointer group"
+            className="overflow-hidden hover:shadow-xl transition-all cursor-pointer group animate-slide-up"
+            style={{ animationDelay: `${index * 0.1}s`, opacity: 0 }}
             onClick={() => setSelectedGame(game.id.toString())}
           >
             <div className="aspect-video bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center text-9xl group-hover:scale-105 transition-transform">
